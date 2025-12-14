@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# PyInstaller / Build
+build/
+dist/
+*.spec
+
+# Logs and other temporary files
+*.log
