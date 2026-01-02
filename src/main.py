@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import tkinter as tk
 from data_managers.csv_manager import CSVManager
 from view.main_window import MainWindow
@@ -9,7 +12,7 @@ class App:
         self.manager = CSVManager("words.csv")
         self.view = MainWindow(self.root, self.schedule_next)
 
-        self.interval = 5000
+        self.interval = 20*60*1000
         self.schedule_next()
         self.root.mainloop()
 
