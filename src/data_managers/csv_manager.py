@@ -31,7 +31,11 @@ class CSVManager:
 
     def get_random_word(self):
         word = random.choice(list(self.words.keys()))
-        return word, self.words[word]
+        translation = self.words[word]
 
+        if random.choice([True, False]):
+            return word, translation, "en-ru"
+        else:
+            return translation, word, "ru-en"
 
 

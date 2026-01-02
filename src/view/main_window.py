@@ -7,50 +7,64 @@ class MainWindow:
         self.master = master
         self.check_callback = check_callback
         self.popup = None
-        self.answer_entry = None
+        self.current_display = ""
+        self.current_hidden = ""
+
+        self.color_yellow = "#fff9c4"  # Светло-желтый
+        self.color_yellow_dark = "#fff176"  # Насыщенный желтый
+        self.color_blue = "#e1f5fe"  # Светло-голубой
+        self.color_blue_dark = "#b3e5fc"  # Насыщенный голубой
 
 
-    def show_popup(self, word, translation):
+    def show_popup(self, display_text, hidden_text, mode):
+        self.current_display = display_text
+        self.current_hidden = hidden_text
+
         self.popup = tk.Toplevel(self.master)
         self.popup.title("Пора хардворкинга!!")
         self.popup.attributes("-topmost", True)
         self.popup.protocol("WM_DELETE_WINDOW", self.finish_and_next)
+        self.popup.config(bg="white")
 
         screen_width = self.popup.winfo_screenwidth()
         screen_height = self.popup.winfo_screenheight()
-        width = screen_width//8
-        height = screen_height//8
+        width = screen_width//7
+        height = screen_height//10
 
-        x = screen_width - width -20
-        y = 20
+        x = screen_width - width -30
+        y = 30
 
         self.popup.geometry(f'{width}x{height}+{x}+{y}')
 
-        tk.Label(self.popup, text=f"Слово: {word}", font=("Arial", 10, "bold")).pack(pady=5)
+        self.card_btn = tk.Button(
+            self.popup,
+            text=self.current_display,
+            font=("Verdana", 16, "bold"),
+            bg=self.color_yellow,
+            activebackground=self.color_yellow_dark,  # Цвет при клике
+            relief="flat",  # Плоский вид без серых рамок
+            bd=0,
+            wraplength=200,
+            command=self.flip_card
+        )
+        self.card_btn.pack(expand=True, fill='both', padx=10, pady=10)
 
-        self.answer_entry = tk.Entry(self.popup)
-        self.answer_entry.pack(pady=5, padx=10)
-        self.answer_entry.focus_set()
-        self.answer_entry.bind("<Return>", lambda e: self.on_submit(translation))
+        # tk.Label(self.popup, text="Нажми, чтобы перевернуть", font=("Arial", 16, "italic")).pack(pady=5)
 
-        self.result_label = tk.Label(self.popup, text="", font=("Arial", 9))
-        self.result_label.pack(pady=5)
+    def flip_card(self):
+        self.current_display, self.current_hidden = self.current_hidden, self.current_display
+        self.card_btn.config(text=self.current_display)
 
-        self.action_btn = tk.Button(self.popup, text="Проверить", command=lambda: self.on_submit(translation))
-        self.action_btn.pack(pady=5)
-
-    def on_submit(self, correct_answer):
-        user_answer = self.answer_entry.get().strip().lower()
-        true_answer = str(correct_answer).strip().lower()
-        print(f"DEBUG: Введено: '{user_answer}', Должно быть: '{true_answer}'")
-        if user_answer == true_answer:
-            self.result_label.config(text="✅ Верно!", fg="green")
-
+        if self.card_btn.cget("bg") == self.color_yellow:
+            self.card_btn.config(
+                bg=self.color_blue,
+                activebackground=self.color_blue_dark
+            )
         else:
-            self.result_label.config(text=f"❌ Ошибка!\nПравильный перевод: {correct_answer}", fg="red")
-
-        self.action_btn.config(state="disabled")
-        self.answer_entry.config(state="disabled")
+            self.card_btn.config(
+                bg=self.color_yellow,
+                activebackground=self.color_yellow_dark
+            )
 
     def finish_and_next(self):
         if self.popup:

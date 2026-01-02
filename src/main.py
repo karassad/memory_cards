@@ -17,8 +17,8 @@ class App:
         self.root.after(self.interval, self.show_word)
 
     def show_word(self):
-        word, translation = self.manager.get_random_word()
-        self.view.show_popup(word, translation)
+        display, hidden, mode = self.manager.get_random_word()
+        self.view.show_popup(display, hidden, mode)
 
 if __name__ == "__main__":
     App()
